@@ -1,17 +1,13 @@
 package com.example.demo.repository;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import com.example.demo.model.Note;
 
@@ -32,43 +28,44 @@ public class NotesRepository {
 		return result;
 	}
 	
-	public Note getNoteByName(String name) {
+	public Note getNoteByName(String name) throws IOException {
 		
 		Note note = null;
 		
 		File file = new File("C:\\Users\\stefania\\Desktop\\demo\\src\\main\\resources\\notes");
         File[] files = file.listFiles();
         
-        Object[] a = Arrays.stream(files).filter(x ->  x.getName().equals(name)).toArray();
+        Object[] a = Arrays.stream(files).filter(x -> x.getName().equals(name)).toArray();
         if(a.length > 0) {
         	 File x = (File)a[0];
         	 note = new Note(x.getName());
-        	 System.out.println("Found");
+        	 note.Content = new String(Files.readAllBytes(Paths.get("C:\\Users\\stefania\\Desktop\\demo\\src\\main\\resources\\notes" 
+                	 + "\\" + x.getName())));
+        	 
         }
         else {
-        	System.out.println("not Found");
+        	System.out.println("File not found");
         }
        
-      return note;
-        
-      //  boolean contains = Arrays.stream(files).anyMatch(x -> x.getName().equals(name));
-   
-		
+      return note;		
 	}
 	
-	public String TestMethod() {
-		 String result = null;
-			try {
-			Resource resource = new ClassPathResource("classpath:notes/note1.txt");
-		    InputStream inputStream = resource.getInputStream();
-		    Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
-		    result = scanner.useDelimiter("\\A").next();
-		    //System.out.println(result);
-			}
-			catch(Exception e) {
-				System.out.println("File problem");
-			}
-			return result;
+	public boolean AddNote(String name, String content) throws IOException {
+		
+		File dir = new File("C:\\Users\\stefania\\Desktop\\demo\\src\\main\\resources\\notes");
+		File newFile = new File(dir + "\\" + name);
+
+		if(newFile.exists() == true) {
+			return false; 
+		}
+		
+		newFile.createNewFile();
+		
+		FileWriter myWriter = new FileWriter(dir + "\\" + name);
+		myWriter.write(content);
+		myWriter.close();
+		
+		 return true;
 	}
 	
 }

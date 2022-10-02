@@ -24,57 +24,51 @@ public class DemoApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//System.out.println("Runs");
-		String command = null;
 		String name = null;
-		String content = null;
 		
 		NotesRepository notes = new NotesRepository();
 		
-		// 1st argument exists for all cases
-		try {
-			command = args[0];
+		if(args.length == 0) {
 			
-			if(command.equals("-list")) {
-				
-				try {
-					name = args[1];
-					System.out.println("Will print only one title");
-				}
-				catch(Exception e) {
-					System.out.println("Will print all titles");
-				}
-			}
-			
-			else if(command.equals("-add")) {
-				
-				try {
-					name = args[1];
-					content = args[2];
-				}
-				catch(Exception e) {
-					System.out.println("Not enough arguments");
-				}
-			}
-			else {
-				System.out.println("Command not recognized");
-			}
-		}
-		catch(Exception ex) {
-			System.out.println("No arguments provided");
+			System.out.println("Not enough arguments");
 		}
 		
-
-	 //  List<Note> res = notes.GetAllTitles();
-	 //  for(Note note : res) {
-	//	   System.out.println(note.Name);
-	 //  }
-	  
+		if(args[0].equals("-list") && args.length == 1) {
+			
+			List<Note> res = notes.GetAllTitles();
+			 for(Note note : res) {
+				System.out.println(note.Name);
+			}
+		}
 		
-		Note note = notes.getNoteByName("note1.txt");
-		System.out.println(note.Name);
+		else if(args[0].equals("-list") && args.length == 2) {
+			
+			name = args[1];
+			Note note = notes.getNoteByName(name);
+			System.out.println(note.Name);
+			System.out.println(note.Content);
+			
+		}
+		
+		else if(args[0].equals("-add") && args.length > 2) {
+			
+			name = args[1];
+			StringBuilder content = new StringBuilder();
+			
+			for(int i = 2; i < args.length; i++) {
+				content.append(args[i]);
+				content.append(" ");
+			}
+			
+			boolean fileCreated = notes.AddNote(name, content.toString());
+			System.out.println(fileCreated == true ? "File added successfully" : "File with same name already exists" );
+		}
+		
+		else {
+			System.out.println("Command not recognized");
+		}
 		
 	   System.out.println("Finish");
 	    
 	}
-
 }
