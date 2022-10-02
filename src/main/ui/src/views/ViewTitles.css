@@ -1,0 +1,9 @@
+.content-titiles{
+    top: 70px;
+    right: 100px;
+}
+.title-cards {
+    width: 770px;
+    height: 400px;
+    overflow-y: scroll;
+}

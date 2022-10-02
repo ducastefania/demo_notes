@@ -30,45 +30,46 @@ public class DemoApplication implements CommandLineRunner{
 		
 		if(args.length == 0) {
 			
-			System.out.println("Not enough arguments");
-		}
-		
-		if(args[0].equals("-list") && args.length == 1) {
-			
-			List<Note> res = notes.GetAllTitles();
-			 for(Note note : res) {
-				System.out.println(note.Name);
-			}
-		}
-		
-		else if(args[0].equals("-list") && args.length == 2) {
-			
-			name = args[1];
-			Note note = notes.getNoteByName(name);
-			System.out.println(note.Name);
-			System.out.println(note.Content);
-			
-		}
-		
-		else if(args[0].equals("-add") && args.length > 2) {
-			
-			name = args[1];
-			StringBuilder content = new StringBuilder();
-			
-			for(int i = 2; i < args.length; i++) {
-				content.append(args[i]);
-				content.append(" ");
-			}
-			
-			boolean fileCreated = notes.AddNote(name, content.toString());
-			System.out.println(fileCreated == true ? "File added successfully" : "File with same name already exists" );
+			System.out.println("Not enough arguments. Only listening on port 8080 ...");
 		}
 		
 		else {
-			System.out.println("Command not recognized");
-		}
 		
-	   System.out.println("Finish");
+			if(args[0].equals("-list") && args.length == 1) {
+				
+				List<Note> res = notes.GetAllTitles();
+				 for(Note note : res) {
+					System.out.println(note.Name);
+				}
+			}
+			
+			else if(args[0].equals("-list") && args.length == 2) {
+				
+				name = args[1];
+				Note note = notes.getNoteByName(name);
+				System.out.println(note.Name);
+				System.out.println(note.Content);
+				
+			}
+		
+			else if(args[0].equals("-add") && args.length > 2) {
+				
+				name = args[1];
+				StringBuilder content = new StringBuilder();
+				
+				for(int i = 2; i < args.length; i++) {
+					content.append(args[i]);
+					content.append(" ");
+				}
+				
+				boolean fileCreated = notes.AddNote(name, content.toString());
+				System.out.println(fileCreated == true ? "File added successfully" : "File with same name already exists" );
+			}
+			
+			else {
+				System.out.println("Command not recognized");
+			}
+		}
 	    
 	}
 }
